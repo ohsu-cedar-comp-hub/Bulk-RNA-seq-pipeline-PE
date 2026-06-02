@@ -8,6 +8,12 @@ adjp <- snakemake@params[['adjp']]
 
 printTree <- snakemake@params[['printTree']]
 
+if ("topGO" %in% rownames(installed.packages()) == FALSE) {
+    install.packages("/home/groups/senvi/doe/A375_042226_BulkRNA/Bulk-RNA-seq-pipeline-PE/env_files/GO.db_3.22.0.tar.gz", repos=NULL, type="source")
+    install.packages("/home/groups/senvi/doe/A375_042226_BulkRNA/Bulk-RNA-seq-pipeline-PE/env_files/topGO_2.62.0.tar.gz", repos=NULL, type="source")
+}
+
+
 library(GO.db)
 library(topGO)
 library(ggplot2)

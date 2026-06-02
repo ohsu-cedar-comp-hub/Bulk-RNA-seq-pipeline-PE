@@ -29,7 +29,7 @@ if (snakemake@threads > 1) {
 
 # Read in metadata table and order according to sampleID
 md <- read.delim(file=metadata, sep = "\t", stringsAsFactors = FALSE)
-md <- md[order(md[sampleID]),]
+md <- md[order(md[[sampleID]]),]
 
 # Read in counts table
 subdata <- read.table(counts, header=TRUE, row.names=1, sep="\t", check.names=FALSE)

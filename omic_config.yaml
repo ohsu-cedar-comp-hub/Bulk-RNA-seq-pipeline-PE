@@ -4,15 +4,15 @@
 
 # GTF file for the genome build you would like to use
 gtf_file:
-  /home/groups/CEDAR/estabroj/indexes/Mus_musculus/UCSC/mm10/Annotation/Archives/archive-2015-07-17-14-33-26/Genes/genes.gtf
+  /home/exacloud/gscratch/CEDAR/anno/gtf/hg38_ens94.chr.gtf
 # Bed file for rseqc function read_distribution
 bed_file:
-  /home/groups/CEDAR/estabroj/beta4/data/mm10_MGC_gene.bed
+  /home/exacloud/gscratch/CEDAR/anno/gtf/hg38_ens94.chr.bed
 # Pre-built STAR index
 star_index:
-  /home/groups/CEDAR/estabroj/indexes/Mus_musculus/UCSC/mm10/Sequence/Star2Index
+  /home/exacloud/gscratch/CEDAR/anno/indices/star/hg38
 filter_anno:
-  /home/groups/CEDAR/anno/biomaRt/hg38.Ens_90.biomaRt.geneAnno.Rdata
+  /home/exacloud/gscratch/CEDAR/anno/biomaRt/hg38.Ens_94.biomaRt.geneAnno.Rdata
 
 ####################################################################
 # Tool-specific files that will not change from project-to-project
@@ -35,7 +35,7 @@ star_tool:
 # Metadata needed for differential expression analysis
 omic_meta_data:
 # tab delimited file
-  /path/to/metadata.txt
+  ./data/metadata.txt
 
 ##############################################################################################
 # Project-specific specifications you will need to make prior to submission of the pipeline
@@ -47,10 +47,10 @@ biotypes:
   protein_coding
 # Unique project identifier which will be concatenated onto your counts table file name.
 project_id:
-  {project-id}
+  A375_042226
 # Genome assembly used for GO analysis, format must be as below, with the genome assembly first, and the version of ensembl second, separated by a period (Unless there is only one ensembl version, then just write assembly).
 assembly:
-  mm10
+  hg38
 # remove mito genes (1/0)
 mito:
   1
@@ -68,34 +68,65 @@ seq_layout:
 # The column name of the characteristic you would like to do DE on. Example: Diagnosis, genotype, etc. This must be a column in your omic_meta_data.
 linear_model:
   #Column name in meta data file to generate contrasts by
-  Condition
+  Sample
 # The column name in which your sampleIDs are defined in omic_meta_data. These should match the sampleIDs in your fastq files.
 sample_id:
   #Column name listing unique sample ids to be used. This needs to be the first column in the meta data file
-  SampleID
+  StudyID
 # The column names in your omic_meta_data file which you would like to annotate your heatmaps by. This is used as a QC to look for batch effects. Enter columns which could potentially introduce a batch effect in your data.
 meta_columns_to_plot:
-  Time: Time
-  Condition: Condition
-  Lane: Lane
+  Sample: Sample
+  Phenotype: Phenotype
+  Treatment: Treatment
+  Timing: Timing
 pca:
   labels:
     #Column name in meta data file to generate group files and comparisons
-    - Condition
+    - Phenotype_Treatment_Timing
 # Contrasts which you would like to run differential expression on.
 # For example if you want to look at wild type (wt) vs. mutant (mut), you would specify mut-vs-wt
 # It is important that when listing your types here, you write your baseline SECOND
 diffexp:
   # contrasts to generate group files and perform comparisons
   contrasts:
-    baseline-vs-contrast:
-      - contrast
-      - baseline
+    S05-vs-ST5:
+      - ST5
+      - S05
+    S015-vs-ST15:
+      - ST15
+      - S015
+    S045-vs-ST45:
+      - ST45
+      - S045
+    S04h-vs-ST4h:
+      - ST4h
+      - S04h
+    D05-vs-DT5:
+      - DT5
+      - D05
+    D015-vs-DT15:
+      - DT15
+      - D015
+    D045-vs-DT45:
+      - DT45
+      - D045
+    D04h-vs-DT4h:
+      - DT4h
+      - D04h
+    DT5-vs-ST5:
+      - ST5
+      - DT5
+    DT15-vs-ST15:
+      - ST15
+      - DT15
+    DT45-vs-ST45:
+      - ST45
+      - DT45
+    DT4h-vs-ST4h:
+      - ST4h
+      - DT4h
   # This option is specified if you would like to run DESeq2 on a subset of your samples (> pairwise comparison)
   LRT:
-    - contrast1
-    - contrast2
-    - baseline
 # If you would like to colour your QC plots by an RColorBrewer palette, list that palette under the rcolorbrewer parameter, otherwise, write "NA"
 # If you would like to colour your QC plots by specific colours, please list them under the discrete category, with one colour for each bullet point
 ## The discrete colours will be assigned to your Conditions (ie. linear_model) in the order that they show up in your metadata table, when it is ordered alphabetically by sample ID

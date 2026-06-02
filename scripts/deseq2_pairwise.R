@@ -88,7 +88,7 @@ if (length(labels)>1) {
 
 res <- results(dds, contrast=contrast,  independentFiltering = FALSE, cooksCutoff = Inf)
 # shrink fold changes for lowly expressed genes
-res <- lfcShrink(dds, contrast=contrast, res=res)
+res <- lfcShrink(dds, coef = resultsNames(dds)[2], res=res)
 
 # MA plot - calc norm values yourself to plot with ggplot
 # MA plot is log2normalized counts (averaged across all samples) vs. log2FC

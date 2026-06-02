@@ -10,45 +10,61 @@ cat(sprintf(c('Working directory',getwd())))
 
 cat(sprintf('Setting parameters'))
 
+#pca_plot <- "results/diffexp/group/LRT_pca_DIV.pdf"
 pca_plot <- snakemake@output[['pca']]
 cat(sprintf(c('PCA plot: ',pca_plot)))
 
+#labels <- "Phenotype_Treatment_Timing"
 labels <- snakemake@params[['pca_labels']]
 cat(sprintf(c('PCA Labels: ',labels)))
 
+#sd_mean_plot <- "results/diffexp/group/LRT_sd_mean_plot_DIV.pdf"
 sd_mean_plot <- snakemake@output[['sd_mean_plot']]
 cat(sprintf(c('SD Mean plot: ',sd_mean_plot,'\n')))
 
+#distance_plot <- "results/diffexp/group/LRT_distance_plot_DIV.pdf"
 distance_plot <- snakemake@output[['distance_plot']]
 cat(sprintf(c('Distance plot: ',distance_plot,'\n')))
 
+#heatmap_plot <- "results/diffexp/group/LRT_heatmap_plot_DIV.pdf"
 heatmap_plot <- snakemake@output[['heatmap_plot']]
 cat(sprintf(c('Heatmap Plot: ', heatmap_plot, '\n')))
 
+#rds_out <- "results/diffexp/group/LRT_all_DIV.rds"
 rds_out <- snakemake@output[['rds']]
 cat(sprintf(c('RDS Output: ', rds_out, '\n')))
 
+#rld_out <- "results/diffexp/group/LRT_rlog_dds_DIV.rds"
 rld_out <- snakemake@output[['rld_out']]
 cat(sprintf(c('RLD Output: ', rld_out, '\n')))
 
+#counts <- "data/A375_042226_counts.filt.txt"
 counts <- snakemake@input[['counts']]
 cat(sprintf(c('Counts table: ', counts, '\n')))
 
+#metadata <- "data/metadata.txt"
 metadata <- snakemake@params[['samples']]
 cat(sprintf(c('Metadata: ', metadata, '\n')))
 
+#sampleID <- "StudyID"
 sampleID <- snakemake@params[['sample_id']]
 cat(sprintf(c('Sample ID: ', sampleID, '\n')))
 
+#Type <- "Sample"
 Type <- snakemake@params[['linear_model']]
 cat(sprintf(c('Linear Model: ', Type, '\n')))
 
+#group <- ""
 group <- snakemake@params[['LRT']]
 cat(sprintf(c('Subsetted group: ', group, '\n')))
 
+#plot_cols <- list("Sample", "Phenotype", "Treatment", "Timing")
+#names(plot_cols) <- c("Sample", "Phenotype", "Treatment", "Timing")
 plot_cols <- snakemake@config[['meta_columns_to_plot']]
 subset_cols = names(plot_cols)
 
+#colors <- NA
+#discrete <- NA
 # color palette
 colors <- snakemake@params[['colors']]
 discrete <- snakemake@params[['discrete']]
@@ -62,11 +78,15 @@ gg_color_hue <- function(n) {
 Dir <- "results/diffexp/group/"
 
 md <- read.delim(file=metadata, sep = "\t", stringsAsFactors = FALSE)
-md <- md[order(md[sampleID]),]
+md <- md[order(md[[sampleID]]),]
+
+md <- subset(md, Phenotype == "DIVIDING")
 
 # Read in counts table
 cts <- read.table(counts, header=TRUE, row.names=1, sep="\t", check.names=F)
 cts <- cts[,order(colnames(cts))]
+
+cts <- cts[,md$StudyID]
 
 # Put sample IDs as rownames of metadata
 rownames(md) <- md[[sampleID]]
